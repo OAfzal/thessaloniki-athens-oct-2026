@@ -8,6 +8,6 @@ Open `dist/index.html` directly in a browser, or serve the `dist` directory with
 
 ## GitHub Pages
 
-Publish from the `main` branch and `/dist` folder in **Settings → Pages**, or use the included workflow after adding one.
+The included GitHub Actions workflow publishes the `dist` directory whenever `main` is updated. In **Settings → Pages**, select **GitHub Actions** as the source if it is not selected automatically.
 
 The itinerary is planning guidance. Reconfirm transport schedules, opening hours, restoration access, and ticket requirements before travel.
