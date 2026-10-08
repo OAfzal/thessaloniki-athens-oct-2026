@@ -21,18 +21,26 @@
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
     body {
-      display: grid;
-      grid-template-columns: 340px 1fr;
       color: var(--ink);
-      background: var(--cream);
       font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
+    #map { position: fixed; inset: 0; }
     aside {
-      overflow-y: auto;
-      padding: 22px 18px 28px;
-      border-right: 1px solid var(--line);
-      background: var(--cream);
+      position: fixed; z-index: 1000; top: 14px; left: 14px;
+      width: 320px; max-height: calc(100% - 28px); overflow-y: auto;
+      padding: 18px 16px 20px;
+      border-radius: 18px;
+      background: rgba(255, 249, 237, .93);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 12px 34px rgba(10, 36, 56, .22);
     }
+    .head { display: flex; align-items: flex-start; gap: 10px; }
+    .head > div { flex: 1; }
+    #toggle {
+      flex: none; padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px;
+      background: #fff; color: var(--muted); font: inherit; font-size: .75rem; cursor: pointer;
+    }
+    aside.collapsed .sub, aside.collapsed #days { display: none; }
     h1 { margin: 0; font-size: 1.45rem; letter-spacing: -.01em; }
     .sub { margin: 4px 0 18px; color: var(--muted); font-size: .9rem; }
     .day { margin-top: 18px; }
@@ -58,7 +66,6 @@
     }
     .name { font-weight: 600; }
     .note { display: block; color: var(--muted); font-size: .8rem; font-weight: 400; }
-    #map { height: 100%; }
 
     .pin {
       display: grid; place-items: center; width: 30px; height: 30px;
@@ -67,24 +74,32 @@
     }
     .pin span { transform: rotate(45deg); color: #fff; font: 700 11px/1 system-ui, sans-serif; }
     .pin.split { background: linear-gradient(45deg, var(--day1) 50%, var(--day2) 50%); }
+    .pin.home { --c: var(--ink); width: 34px; height: 34px; }
+    .pin.home span { font-size: 16px; }
+    .hotel .num { --c: var(--ink); }
     .leaflet-popup-content { margin: 12px 14px; font: 14px/1.45 Inter, system-ui, sans-serif; }
     .leaflet-popup-content b { font-size: 15px; }
     .leaflet-popup-content a { color: var(--day2); }
 
+    .leaflet-top.leaflet-left { left: 346px; }
+
     @media (max-width: 760px) {
-      body { grid-template-columns: 1fr; grid-template-rows: 58vh 1fr; }
-      #map { grid-row: 1; }
-      aside { grid-row: 2; border-right: 0; border-top: 1px solid var(--line); }
+      aside { top: auto; bottom: 10px; left: 10px; right: 10px; width: auto; max-height: 45%; }
+      .leaflet-top.leaflet-left { left: 0; }
+      .leaflet-bottom.leaflet-right { bottom: auto; top: 0; }
     }
   </style>
 </head>
 <body>
-  <aside>
-    <h1>Thessaloniki</h1>
+  <div id="map" role="region" aria-label="Map of Thessaloniki stops"></div>
+  <aside id="panel">
+    <div class="head">
+      <div><h1>Thessaloniki</h1></div>
+      <button id="toggle" type="button" aria-expanded="true">Hide</button>
+    </div>
     <p class="sub">Every stop on the trip, pinned. Tap one to find it on the map.</p>
     <div id="days"></div>
   </aside>
-  <div id="map" role="region" aria-label="Map of Thessaloniki stops"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -105,6 +120,8 @@
       blackPearl:   { name: "Black Pearl", note: "Pirate-ship harbour cruise", ll: [40.62690, 22.94690] },
       whiteTower:   { name: "White Tower", ll: [40.62633, 22.94838] },
     };
+
+    const HOTEL = { name: "Hotel", note: "Ptolemeon 14, 546 30", ll: [40.63959, 22.93855] };
 
     const DAYS = [
       { title: "Day 1 · Upper Town to the markets", hex: "#b9573a",
@@ -145,16 +162,40 @@
     const dayLines = DAYS.map(day =>
       L.polyline(day.stops.map(k => PLACES[k].ll), { color: day.hex, weight: 3, opacity: .7, dashArray: "6 8" }).addTo(map));
 
-    map.fitBounds(L.latLngBounds(Object.values(PLACES).map(p => p.ll)), { padding: [40, 40] });
+    const hotelGmaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Ptolemeon 14, 546 30 Thessaloniki")}`;
+    const hotelMarker = L.marker(HOTEL.ll, {
+      icon: L.divIcon({ className: "", html: '<div class="pin home"><span>⌂</span></div>',
+                        iconSize: [34, 34], iconAnchor: [17, 38], popupAnchor: [0, -36] }),
+      title: HOTEL.name, zIndexOffset: 1000,
+    }).bindPopup(`<b>${HOTEL.name}</b><br>${HOTEL.note}<br><a href="${hotelGmaps}" target="_blank" rel="noopener">Open in Google Maps ↗</a>`).addTo(map);
 
-    // Sidebar.
+    const panel = document.getElementById("panel");
+    const narrow = () => window.matchMedia("(max-width: 760px)").matches;
+    // Keep pins clear of the floating panel when framing the map.
+    const pad = () => narrow() ? { paddingTopLeft: [30, 30], paddingBottomRight: [30, panel.offsetHeight + 30] }
+                               : { paddingTopLeft: [panel.offsetWidth + 50, 40], paddingBottomRight: [40, 40] };
+    map.fitBounds(L.latLngBounds([HOTEL.ll, ...Object.values(PLACES).map(p => p.ll)]), pad());
+
+    const toggle = document.getElementById("toggle");
+    toggle.onclick = () => {
+      const collapsed = panel.classList.toggle("collapsed");
+      toggle.textContent = collapsed ? "Show stops" : "Hide";
+      toggle.setAttribute("aria-expanded", String(!collapsed));
+    };
+
+    // Stop list.
     const daysEl = document.getElementById("days");
+    const hotelEl = document.createElement("ol");
+    hotelEl.className = "hotel";
+    hotelEl.innerHTML = `<li><button type="button"><span class="num">⌂</span><span class="name">${HOTEL.name}<span class="note">${HOTEL.note}</span></span></button></li>`;
+    hotelEl.querySelector("button").onclick = () => { map.flyTo(HOTEL.ll, 17, { duration: .6 }); hotelMarker.openPopup(); };
+    daysEl.appendChild(hotelEl);
     DAYS.forEach((day, d) => {
       const sec = document.createElement("section");
       sec.className = "day";
       sec.style.setProperty("--c", day.hex);
       sec.innerHTML = `<h2>${day.title}<button type="button">Show day</button></h2><ol></ol>`;
-      sec.querySelector("h2 button").onclick = () => map.flyToBounds(dayLines[d].getBounds(), { padding: [50, 50] });
+      sec.querySelector("h2 button").onclick = () => map.flyToBounds(dayLines[d].getBounds(), pad());
       const ol = sec.querySelector("ol");
       day.stops.forEach((key, i) => {
         const p = PLACES[key];
@@ -163,7 +204,6 @@
         li.firstChild.onclick = () => {
           map.flyTo(p.ll, 17, { duration: .6 });
           markers[key].openPopup();
-          if (window.matchMedia("(max-width: 760px)").matches) window.scrollTo({ top: 0, behavior: "smooth" });
         };
         ol.appendChild(li);
       });
