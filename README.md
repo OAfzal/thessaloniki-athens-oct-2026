@@ -1,13 +1,13 @@
-# Thessaloniki → Athens · October 2026
+# Thessaloniki · Trip Map
 
-A responsive, printable trip itinerary for 6–12 October 2026, with a focused Ottoman heritage route through Thessaloniki.
+An interactive map of every stop on the Thessaloniki trip, pinned and numbered by day, with a dashed line showing each day's walking order. Click a stop in the sidebar to fly to it; each pin's popup links out to Google Maps.
+
+Coordinates come from OpenStreetMap. Ano Poli is an area, so its pin sits at the heart of the Upper Town; the Black Pearl is pinned at its mooring by the White Tower.
 
 ## Preview locally
 
-Open `dist/index.html` directly in a browser, or serve the `dist` directory with any static file server.
+Open `dist/index.html` in a browser (it loads Leaflet and map tiles from a CDN, so it needs a connection).
 
 ## GitHub Pages
 
-The included GitHub Actions workflow publishes the `dist` directory whenever `main` is updated. In **Settings → Pages**, select **GitHub Actions** as the source if it is not selected automatically.
-
-The itinerary is planning guidance. Reconfirm transport schedules, opening hours, restoration access, and ticket requirements before travel.
+The GitHub Actions workflow publishes `dist/` whenever `main` is updated.

@@ -4,424 +4,170 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#102a43">
-  <meta name="description" content="A day-by-day Thessaloniki and Athens itinerary for 6–12 October 2026, with Ottoman heritage, maps, and practical travel notes.">
-  <title>Thessaloniki → Athens · 6–12 October 2026</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23102a43'/%3E%3Cpath d='M15 46h34M20 44V25h24v19M18 25h28l-4-7H22zM25 30v14m7-14v14m7-14v14' stroke='%23f2b35d' stroke-width='4' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <meta name="description" content="Map of the places to see in Thessaloniki, pinned stop by stop over two days.">
+  <title>Thessaloniki · Trip Map</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23102a43'/%3E%3Cpath d='M32 12c-8 0-14 6-14 14 0 10 14 26 14 26s14-16 14-26c0-8-6-14-14-14z' fill='%23e9a34a'/%3E%3Ccircle cx='32' cy='26' r='5' fill='%23102a43'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <style>
     :root {
       --ink: #102a43;
-      --navy: #0b2037;
-      --sea: #165b7d;
-      --sky: #d9eef1;
       --cream: #fff9ed;
-      --paper: #f7f0e2;
-      --gold: #e9a34a;
-      --terracotta: #b9573a;
       --muted: #597182;
-      --line: rgba(16, 42, 67, .16);
-      --shadow: 0 18px 45px rgba(10, 36, 56, .12);
-      --radius: 22px;
+      --line: rgba(16, 42, 67, .14);
+      --day1: #b9573a;
+      --day2: #165b7d;
     }
-
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html, body { height: 100%; margin: 0; }
     body {
-      margin: 0;
+      display: grid;
+      grid-template-columns: 340px 1fr;
       color: var(--ink);
       background: var(--cream);
-      font: 16px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    img { max-width: 100%; display: block; }
-    a { color: inherit; }
-    button, input { font: inherit; }
-    .serif { font-family: Georgia, "Times New Roman", serif; }
-    .shell { width: min(1160px, calc(100% - 40px)); margin: auto; }
-
-    .topbar {
-      position: sticky;
-      z-index: 20;
-      top: 0;
-      color: #fff;
-      background: rgba(11, 32, 55, .94);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255,255,255,.1);
+    aside {
+      overflow-y: auto;
+      padding: 22px 18px 28px;
+      border-right: 1px solid var(--line);
+      background: var(--cream);
     }
-    .topbar-inner {
-      min-height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
+    h1 { margin: 0; font-size: 1.45rem; letter-spacing: -.01em; }
+    .sub { margin: 4px 0 18px; color: var(--muted); font-size: .9rem; }
+    .day { margin-top: 18px; }
+    .day h2 {
+      display: flex; align-items: center; gap: 8px;
+      margin: 0 0 8px; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
     }
-    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 760; }
-    .brand-mark {
-      width: 34px; height: 34px; display: grid; place-items: center;
-      color: var(--navy); background: var(--gold); border-radius: 50%; font-family: Georgia, serif;
+    .day h2::before { content: ""; flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+    .day h2 button {
+      margin-left: auto; flex: none; padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px;
+      background: transparent; color: var(--muted); font: inherit; font-size: .7rem; cursor: pointer;
     }
-    .nav { display: flex; align-items: center; gap: 22px; }
-    .nav a { color: #d9e8ef; text-decoration: none; font-size: .9rem; }
-    .nav a:hover { color: white; }
-    .print-btn {
-      border: 1px solid rgba(255,255,255,.28); color: #fff; background: transparent;
-      padding: 8px 13px; border-radius: 999px; cursor: pointer;
+    ol { list-style: none; margin: 0; padding: 0; }
+    li button {
+      display: flex; align-items: center; gap: 10px; width: 100%;
+      padding: 8px 10px; border: 0; border-radius: 10px;
+      background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer;
     }
-
-    .hero {
-      position: relative;
-      min-height: 610px;
-      overflow: hidden;
-      color: #fff;
-      background: var(--navy);
-      display: grid;
-      align-items: end;
+    li button:hover, li button:focus-visible { background: rgba(16, 42, 67, .06); outline: none; }
+    .num {
+      flex: none; display: grid; place-items: center; width: 26px; height: 26px;
+      border-radius: 50%; background: var(--c); color: #fff; font-size: .8rem; font-weight: 700;
     }
-    .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% center; opacity: .78; }
-    .hero::after {
-      content: ""; position: absolute; inset: 0;
-      background: linear-gradient(90deg, rgba(7,25,45,.96) 0%, rgba(7,25,45,.72) 43%, rgba(7,25,45,.1) 78%),
-                  linear-gradient(0deg, rgba(7,25,45,.72), transparent 55%);
+    .name { font-weight: 600; }
+    .note { display: block; color: var(--muted); font-size: .8rem; font-weight: 400; }
+    #map { height: 100%; }
+
+    .pin {
+      display: grid; place-items: center; width: 30px; height: 30px;
+      border: 2px solid #fff; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+      background: var(--c); box-shadow: 0 3px 8px rgba(0, 0, 0, .3);
     }
-    .hero-content { position: relative; z-index: 1; padding: 90px 0 58px; max-width: 720px; }
-    .eyebrow { text-transform: uppercase; letter-spacing: .19em; font-size: .78rem; font-weight: 800; color: #ffd08a; }
-    h1 { margin: 14px 0 18px; font-size: clamp(3rem, 7vw, 6.2rem); line-height: .94; letter-spacing: -.055em; font-weight: 500; }
-    .hero-copy { max-width: 560px; margin: 0; font-size: clamp(1.08rem, 2vw, 1.35rem); color: #e7f0f3; }
-    .trip-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
-    .chip { padding: 9px 14px; border: 1px solid rgba(255,255,255,.24); border-radius: 999px; background: rgba(6,31,50,.4); font-size: .9rem; }
+    .pin span { transform: rotate(45deg); color: #fff; font: 700 11px/1 system-ui, sans-serif; }
+    .pin.split { background: linear-gradient(45deg, var(--day1) 50%, var(--day2) 50%); }
+    .leaflet-popup-content { margin: 12px 14px; font: 14px/1.45 Inter, system-ui, sans-serif; }
+    .leaflet-popup-content b { font-size: 15px; }
+    .leaflet-popup-content a { color: var(--day2); }
 
-    .summary-wrap { position: relative; z-index: 2; margin-top: -28px; }
-    .summary {
-      display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 0;
-      background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
-    }
-    .summary-item { padding: 25px 28px; border-right: 1px solid var(--line); }
-    .summary-item:last-child { border: 0; }
-    .summary-label { display: block; color: var(--muted); font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 800; }
-    .summary-value { display: block; margin-top: 5px; font-size: 1.07rem; font-weight: 760; }
-
-    section { padding: 88px 0; }
-    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 34px; }
-    h2 { margin: 7px 0 0; font-size: clamp(2.3rem, 5vw, 4.1rem); line-height: 1; font-weight: 500; letter-spacing: -.045em; }
-    .section-note { max-width: 410px; margin: 0; color: var(--muted); }
-
-    .route-line { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 42px; }
-    .route-stop { position: relative; border-top: 3px solid var(--line); padding-top: 14px; }
-    .route-stop::before { content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); top: -7px; left: 0; box-shadow: 0 0 0 5px var(--cream); }
-    .route-stop strong { display: block; }
-    .route-stop span { color: var(--muted); font-size: .9rem; }
-
-    .days { display: grid; gap: 18px; }
-    .day {
-      display: grid; grid-template-columns: 145px minmax(0, 1fr); gap: 28px;
-      padding: 28px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
-      box-shadow: 0 8px 28px rgba(16,42,67,.05);
-    }
-    .day-date { border-right: 1px solid var(--line); padding-right: 24px; }
-    .day-date .weekday { color: var(--terracotta); text-transform: uppercase; font-size: .78rem; letter-spacing: .14em; font-weight: 850; }
-    .day-date .number { display: block; font: 3rem/1 Georgia, serif; margin: 8px 0 4px; }
-    .day-date .month { color: var(--muted); }
-    .day h3 { margin: 0 0 8px; font: 500 1.65rem/1.2 Georgia, serif; }
-    .pace { display: inline-block; margin-bottom: 15px; padding: 4px 9px; color: var(--sea); background: #e9f5f7; border-radius: 5px; font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-    .plan-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 11px; }
-    .plan-list li { display: grid; grid-template-columns: 25px 1fr; gap: 10px; align-items: start; }
-    .plan-list input { width: 18px; height: 18px; margin-top: 4px; accent-color: var(--terracotta); cursor: pointer; }
-    .plan-list input:checked + span { color: #7f909a; text-decoration: line-through; text-decoration-thickness: 1px; }
-    .map-link { display: inline-block; margin-top: 15px; color: var(--sea); font-weight: 780; text-decoration-thickness: 1px; text-underline-offset: 4px; }
-    .callout { margin-top: 17px; padding: 14px 16px; border-left: 3px solid var(--gold); background: #fff8e7; color: #526574; border-radius: 0 10px 10px 0; }
-
-    .heritage { background: var(--navy); color: #fff; }
-    .heritage .section-note { color: #b9cbd5; }
-    .heritage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-    .heritage-card { min-height: 230px; padding: 24px; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; background: rgba(255,255,255,.055); }
-    .heritage-card .num { font: 1.25rem Georgia, serif; color: var(--gold); }
-    .heritage-card h3 { margin: 34px 0 8px; font: 500 1.4rem Georgia, serif; }
-    .heritage-card p { margin: 0; color: #c9d7de; font-size: .94rem; }
-    .heritage-card a { display: inline-block; margin-top: 14px; color: #ffd08a; }
-
-    .essentials-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; }
-    .panel { padding: 30px; border-radius: var(--radius); background: var(--paper); }
-    .panel h3 { margin: 0 0 18px; font: 500 1.6rem Georgia, serif; }
-    .panel ul { margin: 0; padding-left: 20px; }
-    .panel li + li { margin-top: 10px; }
-    .booking-list { list-style: none; padding: 0 !important; display: grid; gap: 12px; }
-    .booking-list a { display: flex; justify-content: space-between; gap: 15px; padding-bottom: 12px; border-bottom: 1px solid var(--line); text-decoration: none; font-weight: 750; }
-    .booking-list a::after { content: "↗"; color: var(--terracotta); }
-
-    footer { padding: 38px 0; background: #081a2d; color: #b9cbd5; }
-    .footer-inner { display: flex; justify-content: space-between; gap: 30px; align-items: center; }
-    footer strong { color: #fff; }
-    .reset { border: 0; color: #ffd08a; background: transparent; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
-
-    @media (max-width: 800px) {
-      .shell { width: min(100% - 26px, 680px); }
-      .nav a { display: none; }
-      .hero { min-height: 630px; }
-      .hero::after { background: linear-gradient(0deg, rgba(7,25,45,.96) 0%, rgba(7,25,45,.62) 72%, rgba(7,25,45,.18)); }
-      .hero-content { padding-bottom: 52px; }
-      .summary { grid-template-columns: 1fr; }
-      .summary-item { border-right: 0; border-bottom: 1px solid var(--line); padding: 19px 22px; }
-      .section-head { display: block; }
-      .section-note { margin-top: 18px; }
-      .day { grid-template-columns: 1fr; gap: 15px; padding: 23px; }
-      .day-date { display: flex; align-items: baseline; gap: 8px; border-right: 0; border-bottom: 1px solid var(--line); padding: 0 0 14px; }
-      .day-date .number { display: inline; font-size: 2rem; margin: 0; }
-      .heritage-grid, .essentials-grid { grid-template-columns: 1fr; }
-      .footer-inner { display: block; }
-    }
-
-    @media print {
-      .topbar, .print-btn, .map-link, .reset { display: none !important; }
-      body { background: white; color: #111; font-size: 11pt; }
-      .hero { min-height: 310px; break-after: avoid; }
-      .hero-image { opacity: .45; }
-      .summary-wrap { margin-top: 0; }
-      section { padding: 34px 0; }
-      .day, .heritage-card, .panel { break-inside: avoid; box-shadow: none; }
-      .heritage { background: #fff; color: #111; }
-      .heritage-card { border-color: #bbb; }
-      .heritage-card p, .heritage .section-note { color: #333; }
+    @media (max-width: 760px) {
+      body { grid-template-columns: 1fr; grid-template-rows: 58vh 1fr; }
+      #map { grid-row: 1; }
+      aside { grid-row: 2; border-right: 0; border-top: 1px solid var(--line); }
     }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="shell topbar-inner">
-      <a class="brand" href="#top"><span class="brand-mark">Θ</span><span>Greece · October 2026</span></a>
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="#itinerary">Itinerary</a>
-        <a href="#ottoman-trail">Ottoman trail</a>
-        <a href="#essentials">Essentials</a>
-        <button class="print-btn" type="button" onclick="window.print()">Print / save PDF</button>
-      </nav>
-    </div>
-  </header>
+  <aside>
+    <h1>Thessaloniki</h1>
+    <p class="sub">Every stop on the trip, pinned. Tap one to find it on the map.</p>
+    <div id="days"></div>
+  </aside>
+  <div id="map" role="region" aria-label="Map of Thessaloniki stops"></div>
 
-  <main id="top">
-    <section class="hero" aria-labelledby="trip-title">
-      <img class="hero-image" src="assets/thessaloniki-blue-hour.png" alt="Illustrated blue-hour view of Thessaloniki's White Tower and waterfront">
-      <div class="shell hero-content">
-        <div class="eyebrow">A seven-day city journey</div>
-        <h1 id="trip-title" class="serif">Thessaloniki<br>to Athens</h1>
-        <p class="hero-copy">Layered histories, Ottoman landmarks, Byzantine mosaics and two waterfront cities—paced around two workdays, halal food and an easy final morning.</p>
-        <div class="trip-meta" aria-label="Trip details">
-          <span class="chip">6–12 October 2026</span>
-          <span class="chip">5 nights + late arrival</span>
-          <span class="chip">Thessaloniki → Athens</span>
-        </div>
-      </div>
-    </section>
-
-    <div class="shell summary-wrap" aria-label="Trip overview">
-      <div class="summary">
-        <div class="summary-item"><span class="summary-label">Arrival</span><span class="summary-value">Tue 6 Oct · Thessaloniki · about 23:00</span></div>
-        <div class="summary-item"><span class="summary-label">City transfer</span><span class="summary-value">Sat 10 Oct · afternoon target</span></div>
-        <div class="summary-item"><span class="summary-label">Departure</span><span class="summary-value">Mon 12 Oct · Athens · morning</span></div>
-      </div>
-    </div>
-
-    <section id="itinerary">
-      <div class="shell">
-        <div class="section-head">
-          <div><div class="eyebrow" style="color:var(--terracotta)">Day by day</div><h2 class="serif">The route</h2></div>
-          <p class="section-note">Check items off as you go; progress stays saved on this device. The 7th and 8th stay deliberately light after work.</p>
-        </div>
-
-        <div class="route-line" aria-label="Route timeline">
-          <div class="route-stop"><strong>Thessaloniki</strong><span>6–10 October</span></div>
-          <div class="route-stop"><strong>Southbound</strong><span>10 October</span></div>
-          <div class="route-stop"><strong>Athens</strong><span>10–12 October</span></div>
-        </div>
-
-        <div class="days">
-          <article class="day">
-            <div class="day-date"><span class="weekday">Tuesday</span><span class="number">06</span><span class="month">October</span></div>
-            <div>
-              <span class="pace">Arrival night</span>
-              <h3>Touch down, check in, sleep</h3>
-              <ul class="plan-list">
-                <li><input id="p1" type="checkbox"><span>Arrive in Thessaloniki at approximately 23:00.</span></li>
-                <li><input id="p2" type="checkbox"><span>Use a pre-booked transfer or official taxi; late-night public transport may be limited.</span></li>
-                <li><input id="p3" type="checkbox"><span>Stay near Aristotelous Square, Agia Sofia or the waterfront for an easy walking base.</span></li>
-              </ul>
-              <div class="callout"><strong>Keep it simple:</strong> tell the hotel about the late arrival and confirm reception or self-check-in in advance.</div>
-            </div>
-          </article>
-
-          <article class="day">
-            <div class="day-date"><span class="weekday">Wednesday</span><span class="number">07</span><span class="month">October</span></div>
-            <div>
-              <span class="pace">Work 09:00–19:00 · light evening</span>
-              <h3>Dinner and a waterfront reset</h3>
-              <ul class="plan-list">
-                <li><input id="p4" type="checkbox"><span>Finish work and have a quiet halal dinner near the center—HAYAT Mikrí Póli is a practical first option.</span></li>
-                <li><input id="p5" type="checkbox"><span>Take an easy, flat stroll from the White Tower along the illuminated waterfront.</span></li>
-                <li><input id="p6" type="checkbox"><span>Turn back whenever energy dips; tonight is for settling in, not ticking off sights.</span></li>
-              </ul>
-              <a class="map-link" target="_blank" rel="noreferrer" href="https://www.google.com/maps/dir/HAYAT+Mikri+Poli,+Thessaloniki/White+Tower+of+Thessaloniki/Umbrellas+Zongolopoulos,+Thessaloniki">Open gentle evening route ↗</a>
-            </div>
-          </article>
-
-          <article class="day">
-            <div class="day-date"><span class="weekday">Thursday</span><span class="number">08</span><span class="month">October</span></div>
-            <div>
-              <span class="pace">Work 09:00–19:00 · light evening</span>
-              <h3>A calm evening in the old center</h3>
-              <ul class="plan-list">
-                <li><input id="p8" type="checkbox"><span>After work, walk through Aristotelous Square and along the waterfront promenade.</span></li>
-                <li><input id="p9" type="checkbox"><span>Choose a simple halal Turkish meal at Pites tis Polis, or vegetarian/seafood after confirming ingredients and shared-grill practices.</span></li>
-                <li><input id="p10" type="checkbox"><span>Optional short loop past the Rotunda exterior and Arch of Galerius; save all formal visits for Friday.</span></li>
-              </ul>
-              <a class="map-link" target="_blank" rel="noreferrer" href="https://www.google.com/maps/dir/Aristotelous+Square,+Thessaloniki/White+Tower+of+Thessaloniki/Pites+tis+Polis,+Thessaloniki/Rotunda,+Thessaloniki">Open optional evening route ↗</a>
-              <div class="callout"><strong>No nightlife needed:</strong> these stops are public squares, monuments and promenades; the evening can end immediately after dinner.</div>
-            </div>
-          </article>
-
-          <article class="day">
-            <div class="day-date"><span class="weekday">Friday</span><span class="number">09</span><span class="month">October</span></div>
-            <div>
-              <span class="pace">Full day · heritage focus · uphill</span>
-              <h3>Ottoman Thessaloniki and Ano Poli</h3>
-              <ul class="plan-list">
-                <li><input id="p13" type="checkbox"><span>Start at Yeni Camii, then walk to the Rotunda and its surviving Ottoman minaret.</span></li>
-                <li><input id="p14" type="checkbox"><span>Continue through the center to Bey Hamam, Hamza Bey Mosque and Alaca Imaret.</span></li>
-                <li><input id="p15" type="checkbox"><span>Pause for Friday prayer if you have confirmed a suitable local prayer space; the historic mosques are generally not regular places of worship.</span></li>
-                <li><input id="p16" type="checkbox"><span>After a halal lunch, take a taxi or bus uphill to Heptapyrgion and walk down through Ano Poli past Musa Baba’s türbe and old fountains.</span></li>
-                <li><input id="p29" type="checkbox"><span>Optional Atatürk House Museum if it has reopened; otherwise enjoy a quiet tea and an early evening.</span></li>
-              </ul>
-              <a class="map-link" target="_blank" rel="noreferrer" href="https://www.google.com/maps/dir/Yeni+Mosque,+Thessaloniki/Rotunda,+Thessaloniki/Bey+Hamam,+Thessaloniki/Hamza+Bey+Mosque,+Thessaloniki/Alaca+Imaret,+Thessaloniki/Heptapyrgion,+Thessaloniki/Musa+Baba+Tomb,+Thessaloniki">Open heritage route ↗</a>
-              <div class="callout"><strong>Access note:</strong> Yeni Camii and Alaca Imaret often open only for exhibitions. Hamza Bey Mosque has been under restoration; treat an interior visit as a bonus.</div>
-            </div>
-          </article>
-
-          <article class="day">
-            <div class="day-date"><span class="weekday">Saturday</span><span class="number">10</span><span class="month">October</span></div>
-            <div>
-              <span class="pace">Museum morning · transfer afternoon</span>
-              <h3>One museum, then Thessaloniki → Athens</h3>
-              <ul class="plan-list">
-                <li><input id="p17" type="checkbox"><span>Choose one: Museum of Byzantine Culture or the Archaeological Museum. Keep luggage at the hotel.</span></li>
-                <li><input id="p18" type="checkbox"><span>Target an afternoon train or flight; book only after the operator publishes the confirmed October schedule.</span></li>
-                <li><input id="p19" type="checkbox"><span>Check in around Monastiraki, Syntagma or Koukaki for easy airport and sightseeing connections.</span></li>
-                <li><input id="p20" type="checkbox"><span>Have a quiet halal dinner near the hotel; add a short Plaka or Monastiraki walk only if energy allows.</span></li>
-              </ul>
-              <div class="callout"><strong>Recommendation:</strong> the direct train is city-center to city-center; flying is the backup. Recheck for engineering works or timetable changes before purchase.</div>
-            </div>
-          </article>
-
-          <article class="day">
-            <div class="day-date"><span class="weekday">Sunday</span><span class="number">11</span><span class="month">October</span></div>
-            <div>
-              <span class="pace">Full day · timed entry</span>
-              <h3>Classical Athens</h3>
-              <ul class="plan-list">
-                <li><input id="p21" type="checkbox"><span>Book the Acropolis for the first available morning slot; enter before the larger crowds.</span></li>
-                <li><input id="p22" type="checkbox"><span>Acropolis Museum, then a halal or vegetarian lunch after confirming ingredients.</span></li>
-                <li><input id="p23" type="checkbox"><span>Walk via Plaka and the Roman Agora to Monastiraki.</span></li>
-                <li><input id="p24" type="checkbox"><span>Finish with Syntagma and the National Garden, or Lycabettus Hill according to energy.</span></li>
-                <li><input id="p25" type="checkbox"><span>Pack tonight and confirm the airport transfer.</span></li>
-              </ul>
-              <a class="map-link" target="_blank" rel="noreferrer" href="https://www.google.com/maps/dir/Acropolis+of+Athens/Acropolis+Museum/Plaka,+Athens/Roman+Agora+of+Athens/Monastiraki+Square,+Athens">Open Athens route ↗</a>
-            </div>
-          </article>
-
-          <article class="day">
-            <div class="day-date"><span class="weekday">Monday</span><span class="number">12</span><span class="month">October</span></div>
-            <div>
-              <span class="pace">Departure morning</span>
-              <h3>Athens airport</h3>
-              <ul class="plan-list">
-                <li><input id="p26" type="checkbox"><span>Leave central Athens roughly 3 hours before an international flight, plus transfer time.</span></li>
-                <li><input id="p27" type="checkbox"><span>For a very early flight, pre-book a taxi; metro service may not yet be running.</span></li>
-                <li><input id="p28" type="checkbox"><span>Check out and depart Athens.</span></li>
-              </ul>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="ottoman-trail" class="heritage">
-      <div class="shell">
-        <div class="section-head">
-          <div><div class="eyebrow">Ottoman & Muslim heritage</div><h2 class="serif">Six essential remains</h2></div>
-          <p class="section-note">Most are historic monuments or exhibition venues rather than active mosques. Always verify same-day access.</p>
-        </div>
-        <div class="heritage-grid">
-          <article class="heritage-card"><span class="num">01</span><h3>Bey Hamam</h3><p>Built in 1444 by Sultan Murad II—the city’s earliest Ottoman public building and its great surviving double bath.</p><a href="https://thessaloniki.travel/exploring-the-city/art-culture/museums/bey-hamam/" target="_blank" rel="noreferrer">Official guide ↗</a></article>
-          <article class="heritage-card"><span class="num">02</span><h3>Alaca Imaret</h3><p>A 1484 mosque and charitable complex, recognizable by its twin domes; now a municipal exhibition space.</p><a href="https://thessaloniki.travel/exploring-the-city/art-culture/museums/municipal-art-gallery/" target="_blank" rel="noreferrer">Visitor information ↗</a></article>
-          <article class="heritage-card"><span class="num">03</span><h3>Yeni Camii</h3><p>Vitaliano Poselli’s 1902 mosque for the Dönme community, blending Islamic and European architectural languages.</p><a href="https://thessaloniki.gr/must-to-see/?lang=en" target="_blank" rel="noreferrer">City overview ↗</a></article>
-          <article class="heritage-card"><span class="num">04</span><h3>Hamza Bey Mosque</h3><p>A 15th-century mosque with a rare colonnaded courtyard. Restoration status may affect entry in October.</p><a href="https://culturalegnatia.culture.gov.gr/en/route-stops/thessaloniki/" target="_blank" rel="noreferrer">Cultural route ↗</a></article>
-          <article class="heritage-card"><span class="num">05</span><h3>Rotunda</h3><p>Roman, Christian and then Ottoman: its preserved minaret is a vivid marker of the city’s layered past.</p><a href="https://www.thessalonikitourism.gr/index.php/en/component/k2/item/72-church-of-agios-georgios-rotunda" target="_blank" rel="noreferrer">Monument history ↗</a></article>
-          <article class="heritage-card"><span class="num">06</span><h3>Atatürk House</h3><p>The Ottoman-era house traditionally identified as Mustafa Kemal Atatürk’s birthplace, beside the Turkish Consulate.</p><a href="https://thessaloniki-cg.mfa.gov.tr/" target="_blank" rel="noreferrer">Check consulate notices ↗</a></article>
-        </div>
-      </div>
-    </section>
-
-    <section id="essentials">
-      <div class="shell">
-        <div class="section-head">
-          <div><div class="eyebrow" style="color:var(--terracotta)">Before you go</div><h2 class="serif">Practical notes</h2></div>
-          <p class="section-note">October is ideal for walking, but daylight is shorter and monument schedules can change.</p>
-        </div>
-        <div class="essentials-grid">
-          <article class="panel">
-            <h3>Book and confirm</h3>
-            <ul class="booking-list">
-              <li><a href="https://www.hellenictrain.gr/en/athens-thessaloniki/" target="_blank" rel="noreferrer">Thessaloniki–Athens train</a></li>
-              <li><a href="https://hhticket.gr/" target="_blank" rel="noreferrer">Official Greek heritage tickets</a></li>
-              <li><a href="https://www.amth.gr/en/visit/hours-and-tickets" target="_blank" rel="noreferrer">Archaeological Museum hours</a></li>
-              <li><a href="https://thessaloniki.gr/must-to-see/?lang=en" target="_blank" rel="noreferrer">Thessaloniki monuments guide</a></li>
-            </ul>
-          </article>
-          <article class="panel">
-            <h3>Halal food strategy</h3>
-            <ul>
-              <li><strong>Thessaloniki:</strong> HAYAT Mikrí Póli identifies itself as a dedicated halal Turkish restaurant; Pites tis Polis is another central Turkish option reported as halal.</li>
-              <li><strong>Athens:</strong> Monastiraki has several Syrian, Lebanese, Turkish and South Asian choices; confirm the current halal status at the counter.</li>
-              <li>Ask whether meat is halal, alcohol is used in sauces, and pork shares the grill or fryer.</li>
-              <li>Vegetarian food and seafood are useful fallbacks, but still ask about wine, gelatin and shared cooking surfaces.</li>
-              <li>Historic Ottoman mosques in Thessaloniki are monuments, not dependable daily prayer facilities. Plan prayer separately.</li>
-            </ul>
-            <a class="map-link" target="_blank" rel="noreferrer" href="https://www.google.com/maps/search/halal+restaurants+near+Thessaloniki">Live Thessaloniki halal search ↗</a><br>
-            <a class="map-link" target="_blank" rel="noreferrer" href="https://www.google.com/maps/search/halal+restaurants+near+Monastiraki+Athens">Live Athens halal search ↗</a>
-          </article>
-        </div>
-        <div class="panel" style="margin-top:20px">
-          <h3>Pack & pace</h3>
-          <ul>
-            <li>Comfortable shoes: Ano Poli has steep cobbled streets.</li>
-            <li>A light waterproof layer and something warmer for evenings.</li>
-            <li>Modest clothing for active religious sites.</li>
-            <li>Offline maps and a small amount of cash for markets.</li>
-            <li>Verify restoration access and museum closures before rearranging Friday or Saturday.</li>
-            <li>Departure day stays deliberately empty.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="shell footer-inner">
-      <div><strong>Thessaloniki → Athens</strong><br>6–12 October 2026 · Last reviewed September 2026</div>
-      <button class="reset" type="button" id="reset-progress">Reset checked items</button>
-    </div>
-  </footer>
-
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
-    const key = 'greece-oct-2026-progress';
-    const boxes = [...document.querySelectorAll('.plan-list input[type="checkbox"]')];
-    let saved = {};
-    try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) {}
-    boxes.forEach(box => {
-      box.checked = Boolean(saved[box.id]);
-      box.addEventListener('change', () => {
-        const state = Object.fromEntries(boxes.map(item => [item.id, item.checked]));
-        localStorage.setItem(key, JSON.stringify(state));
+    // Coordinates from OpenStreetMap. Ano Poli is an area (pinned at its heart, by Vlatadon
+    // Monastery); the Black Pearl is pinned at its usual mooring by the White Tower.
+    const PLACES = {
+      anoPoli:      { name: "Ano Poli", note: "Old Upper Town", ll: [40.64150, 22.95420] },
+      walls:        { name: "Byzantine Walls", note: "Trigonion Tower viewpoint", ll: [40.64143, 22.95950] },
+      aristotelous: { name: "Aristotelous Square", ll: [40.63234, 22.94090] },
+      kapani:       { name: "Kapani Market", note: "Vlali market", ll: [40.63593, 22.94263] },
+      modiano:      { name: "Modiano Market", ll: [40.63497, 22.94188] },
+      tsimiski:     { name: "Tsimiski Street", note: "Shopping street", ll: [40.63320, 22.94420] },
+      forum:        { name: "Roman Forum", ll: [40.63771, 22.94587] },
+      dimitrios:    { name: "Agios Dimitrios", note: "Church of Saint Demetrius", ll: [40.63876, 22.94786] },
+      galerius:     { name: "Arch of Galerius", note: "Kamara", ll: [40.63220, 22.95180] },
+      rotunda:      { name: "Rotunda", ll: [40.63331, 22.95287] },
+      blackPearl:   { name: "Black Pearl", note: "Pirate-ship harbour cruise", ll: [40.62690, 22.94690] },
+      whiteTower:   { name: "White Tower", ll: [40.62633, 22.94838] },
+    };
+
+    const DAYS = [
+      { title: "Day 1 · Upper Town to the markets", hex: "#b9573a",
+        stops: ["anoPoli", "walls", "aristotelous", "kapani", "modiano", "tsimiski"] },
+      { title: "Day 2 · Roman centre to the sea", hex: "#165b7d",
+        stops: ["forum", "dimitrios", "galerius", "rotunda", "blackPearl", "whiteTower", "kapani"] },
+    ];
+
+    const map = L.map("map");
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+      maxZoom: 19, subdomains: "abcd",
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    }).addTo(map);
+
+    // Collect every visit per place, so a place visited on both days gets one split pin.
+    const visits = {};
+    DAYS.forEach((day, d) => day.stops.forEach((key, i) => {
+      (visits[key] = visits[key] || []).push({ d, n: i + 1 });
+    }));
+
+    const markers = {};
+    Object.entries(visits).forEach(([key, vs]) => {
+      const p = PLACES[key];
+      const split = new Set(vs.map(v => v.d)).size > 1;
+      const icon = L.divIcon({
+        className: "",
+        html: `<div class="pin${split ? " split" : ""}" style="--c:${DAYS[vs[0].d].hex}"><span>${vs.map(v => v.n).join("·")}</span></div>`,
+        iconSize: [30, 30], iconAnchor: [15, 34], popupAnchor: [0, -32],
       });
+      const when = vs.map(v => `Day ${v.d + 1}, stop ${v.n}`).join(" &amp; ");
+      const gmaps = `https://www.google.com/maps/search/?api=1&query=${p.ll.join(",")}`;
+      markers[key] = L.marker(p.ll, { icon, title: p.name, riseOnHover: true })
+        .bindPopup(`<b>${p.name}</b>${p.note ? `<br>${p.note}` : ""}<br><small>${when}</small><br><a href="${gmaps}" target="_blank" rel="noopener">Open in Google Maps ↗</a>`)
+        .addTo(map);
     });
-    document.getElementById('reset-progress').addEventListener('click', () => {
-      boxes.forEach(box => { box.checked = false; });
-      localStorage.removeItem(key);
+
+    // Dashed line through each day's stops, in order.
+    const dayLines = DAYS.map(day =>
+      L.polyline(day.stops.map(k => PLACES[k].ll), { color: day.hex, weight: 3, opacity: .7, dashArray: "6 8" }).addTo(map));
+
+    map.fitBounds(L.latLngBounds(Object.values(PLACES).map(p => p.ll)), { padding: [40, 40] });
+
+    // Sidebar.
+    const daysEl = document.getElementById("days");
+    DAYS.forEach((day, d) => {
+      const sec = document.createElement("section");
+      sec.className = "day";
+      sec.style.setProperty("--c", day.hex);
+      sec.innerHTML = `<h2>${day.title}<button type="button">Show day</button></h2><ol></ol>`;
+      sec.querySelector("h2 button").onclick = () => map.flyToBounds(dayLines[d].getBounds(), { padding: [50, 50] });
+      const ol = sec.querySelector("ol");
+      day.stops.forEach((key, i) => {
+        const p = PLACES[key];
+        const li = document.createElement("li");
+        li.innerHTML = `<button type="button"><span class="num">${i + 1}</span><span class="name">${p.name}${p.note ? `<span class="note">${p.note}</span>` : ""}</span></button>`;
+        li.firstChild.onclick = () => {
+          map.flyTo(p.ll, 17, { duration: .6 });
+          markers[key].openPopup();
+          if (window.matchMedia("(max-width: 760px)").matches) window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+        ol.appendChild(li);
+      });
+      daysEl.appendChild(sec);
     });
   </script>
 </body>
